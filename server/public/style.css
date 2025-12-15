@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f3f3f3;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.toolbar {
+  width: 170px;
+  overflow-x: hidden;
+  background: #1e1e1e;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool-btn {
+  background: #2d2d2d;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tool-btn.active {
+  background: #4a90e2;
+}
+
+.tool-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.workspace {
+  flex: 1;
+  padding: 20px;
+}
+
+canvas {
+  border: 1px solid #999;
+  display: block;
+  margin-top: 10px;
+}

@@ -1,0 +1,12 @@
+1- cd server
+2- npm install
+3- npm start
+
+4- cd .. (bargard dir ghabl)
+5- cd py 
+6- pip install fastapi uvicorn opencv-python numpy
+
+agar pip kar nakard : 6.1- python -m pip install fastapi uvicorn opencv-python numpy
+7-(too ye terminale dige) uvicorn app:app --port 8000
+
+agar natunesti bala biari mohem nist faghta az dir py file app.py ro bekhun

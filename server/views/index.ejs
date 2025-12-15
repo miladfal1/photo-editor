@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fa">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Photo Editor</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="toolbar">
+        <label style="color: white; font-size: 12px">Resize</label>
+
+        <input id="resizeW" type="number" placeholder="Width" style="width: 90px" />
+        <input id="resizeH" type="number" placeholder="Height" style="width: 90px" />
+
+        <button id="applyResizeBtn" class="tool-btn">📐 Apply Resize</button>
+        <button id="cropBtn" class="tool-btn active">✂ Crop</button>
+        <button id="applyCropBtn" class="tool-btn">✔ Apply crop</button>
+        <button id="lineBtn" class="tool-btn">／ Line</button>
+        <button id="rectBtn" class="tool-btn">▭ Rect</button>
+        <label style="color: white; font-size: 12px">Rotate</label>
+        <input id="rotateSlider" type="range" min="-180" max="180" value="0" />
+        <button id="applyRotateBtn" class="tool-btn">↻ Apply Rotate</button>
+        <label style="color: white; font-size: 12px">Brightness</label>
+        <input id="brightnessSlider" type="range" min="-100" max="100" value="0" />
+        <label style="color: white; font-size: 12px">Contrast</label>
+        <input id="contrastSlider" type="range" min="50" max="200" value="100" />
+        <button id="applyBCBtn" class="tool-btn">☀ Apply B/C</button>
+        <label style="color: white; font-size: 12px">Blur</label>
+        <input id="blurSlider" type="range" min="0" max="20" value="0" />
+        <button id="applyBlurBtn" class="tool-btn">🌫 Apply Blur</button>
+        <button id="removeRBtn" class="tool-btn">❌ R</button>
+        <button id="removeGBtn" class="tool-btn">❌ G</button>
+        <button id="removeBBtn" class="tool-btn">❌ B</button>
+        <button id="edgeBtn" class="tool-btn">🧠 Edge Detect</button>
+        <button id="cornerBtn" class="tool-btn">📐 Corner Detect</button>
+        <button id="backBtn" class="tool-btn">↩ Back</button>
+        <button id="exportBtn" class="tool-btn">⬇ Export</button>
+      </div>
+
+      <div class="workspace">
+        <input type="file" id="fileInput" />
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

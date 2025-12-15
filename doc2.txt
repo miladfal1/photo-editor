@@ -1,0 +1,36 @@
+1-
+ببین این خط که استاد استفاده میکرد : 
+img = cv2.imread(...)
+ برای خوندن تصویر از کامپیوتر ما بجاش اینو داریم : 
+ data = await image.read()
+img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+توضیح خیلی ساده براش:
+استاد تصویر رو از فایل سیستم می‌خونه
+ما تصویر رو از درخواست HTTP می‌گیریم
+
+
+
+2-
+با اینم معمولا نشون میداد استاد : 
+cv2.imshow("image", img)
+ که ما نداریم چون داریم عکس رو بعد از عملیات برمیگردونیم به سرور که روی مرورگر نشون بدیم :agar
+ _, buf = cv2.imencode(".png", img)
+return Response(content=buf.tobytes(), media_type="image/png")
+
+
+
+3-
+این خط استاد : 
+img_resized = cv2.resize(
+    img,
+    (300, 300),
+    interpolation=cv2.INTER_NEAREST
+)
+ با ایت جایگزین شده :
+
+ img_resized = cv2.resize(
+    img,
+    (width, height),
+    interpolation=cv2.INTER_NEAREST
+)
