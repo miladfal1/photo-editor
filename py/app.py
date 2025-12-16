@@ -42,96 +42,6 @@ async def crop(
     _, buf = cv2.imencode(".png", cropped)
     return Response(content=buf.tobytes(), media_type="image/png")
 
-@app.post("/line")
-async def draw_line(
-    image: UploadFile = File(...),
-    x1: int = Form(...),
-    y1: int = Form(...),
-    x2: int = Form(...),
-    y2: int = Form(...)
-):
-    data = await image.read()
-    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-
-    cv2.line(
-        img,
-        (x1, y1),
-        (x2, y2),
-        color=(0, 0, 255),
-        thickness=2
-    )
-
-    _, buf = cv2.imencode(".png", img)
-    return Response(content=buf.tobytes(), media_type="image/png")
-
-@app.post("/rectangle")
-async def draw_rectangle(
-    image: UploadFile = File(...),
-    x1: int = Form(...),
-    y1: int = Form(...),
-    x2: int = Form(...),
-    y2: int = Form(...)
-):
-    data = await image.read()
-    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-
-    cv2.rectangle(
-        img,
-        (x1, y1),
-        (x2, y2),
-        color=(0, 255, 0),
-        thickness=2
-    )
-
-    _, buf = cv2.imencode(".png", img)
-    return Response(content=buf.tobytes(), media_type="image/png")
-
-
-@app.post("/circle")
-async def draw_circle(
-    image: UploadFile = File(...),
-    cx: int = Form(...),
-    cy: int = Form(...),
-    radius: int = Form(...)
-):
-    data = await image.read()
-    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-
-    cv2.circle(
-        img,
-        center=(cx, cy),
-        radius=radius,
-        color=(255, 0, 0),  # آبی (BGR)
-        thickness=2
-    )
-
-    _, buf = cv2.imencode(".png", img)
-    return Response(content=buf.tobytes(), media_type="image/png")
-
-@app.post("/text")
-async def put_text(
-    image: UploadFile = File(...),
-    text: str = Form(...),
-    x: int = Form(...),
-    y: int = Form(...)
-):
-    data = await image.read()
-    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-
-    cv2.putText(
-        img,
-        text,
-        (x, y),
-        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-        fontScale=1,
-        color=(255, 255, 255),
-        thickness=2,
-        lineType=cv2.LINE_AA
-    )
-
-    _, buf = cv2.imencode(".png", img)
-    return Response(content=buf.tobytes(), media_type="image/png")
-
 
 @app.post("/rotate")
 async def rotate(
@@ -247,3 +157,92 @@ async def channel_remove(
     _, buf = cv2.imencode(".png", img)
     return Response(content=buf.tobytes(), media_type="image/png")
 
+@app.post("/line")
+async def draw_line(
+    image: UploadFile = File(...),
+    x1: int = Form(...),
+    y1: int = Form(...),
+    x2: int = Form(...),
+    y2: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.line(
+        img,
+        (x1, y1),
+        (x2, y2),
+        color=(0, 0, 255),
+        thickness=2
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+@app.post("/rectangle")
+async def draw_rectangle(
+    image: UploadFile = File(...),
+    x1: int = Form(...),
+    y1: int = Form(...),
+    x2: int = Form(...),
+    y2: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.rectangle(
+        img,
+        (x1, y1),
+        (x2, y2),
+        color=(0, 255, 0),
+        thickness=2
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+
+@app.post("/circle")
+async def draw_circle(
+    image: UploadFile = File(...),
+    cx: int = Form(...),
+    cy: int = Form(...),
+    radius: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.circle(
+        img,
+        center=(cx, cy),
+        radius=radius,
+        color=(255, 0, 0),  # آبی (BGR)
+        thickness=2
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+@app.post("/text")
+async def put_text(
+    image: UploadFile = File(...),
+    text: str = Form(...),
+    x: int = Form(...),
+    y: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.putText(
+        img,
+        text,
+        (x, y),
+        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        fontScale=1,
+        color=(255, 255, 255),
+        thickness=2,
+        lineType=cv2.LINE_AA
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
