@@ -23,6 +23,29 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+app.post("/api/resize", upload.single("image"), async (req, res) => {
+  const { width, height } = req.body;
+
+  const form = new FormData();
+  form.append("width", width);
+  form.append("height", height);
+  form.append("image", fs.createReadStream(req.file.path));
+
+  console.log(form);
+
+  const response = await fetch("http://localhost:8000/resize", {
+    method: "POST",
+    body: form,
+    headers: form.getHeaders(),
+  });
+
+  const buffer = await response.arrayBuffer();
+  fs.unlinkSync(req.file.path);
+
+  res.set("Content-Type", "image/png");
+  res.send(Buffer.from(buffer));
+});
+
 app.post("/api/crop", upload.single("image"), async (req, res) => {
   const { x, y, w, h } = req.body;
 
@@ -149,27 +172,6 @@ app.post("/api/channel", upload.single("image"), async (req, res) => {
   form.append("image", fs.createReadStream(req.file.path));
 
   const response = await fetch("http://localhost:8000/channel", {
-    method: "POST",
-    body: form,
-    headers: form.getHeaders(),
-  });
-
-  const buffer = await response.arrayBuffer();
-  fs.unlinkSync(req.file.path);
-
-  res.set("Content-Type", "image/png");
-  res.send(Buffer.from(buffer));
-});
-
-app.post("/api/resize", upload.single("image"), async (req, res) => {
-  const { width, height } = req.body;
-
-  const form = new FormData();
-  form.append("width", width);
-  form.append("height", height);
-  form.append("image", fs.createReadStream(req.file.path));
-
-  const response = await fetch("http://localhost:8000/resize", {
     method: "POST",
     body: form,
     headers: form.getHeaders(),

@@ -11,20 +11,17 @@ async def resize(
     width: int = Form(...),
     height: int = Form(...)
 ):
+    print("request recevied from api/resize")
     
-    # عکس روی به جای کامپیوتر خودمون از سرور که پاس داده میخونیم
     data = await image.read()
     img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
 
-
-    # همون متدای استاده فقط عرض ئ ارتفاع رو دستی وارد نکردیم
     img_resized = cv2.resize(
         img,
         (width, height),
         interpolation=cv2.INTER_NEAREST
     )
 
-    #پاس دادیم به سرور دوباره تو کلاس اینجا نشون میدادیم 
     _, buf = cv2.imencode(".png", img_resized)
     return Response(content=buf.tobytes(), media_type="image/png")
 
@@ -45,21 +42,120 @@ async def crop(
     _, buf = cv2.imencode(".png", cropped)
     return Response(content=buf.tobytes(), media_type="image/png")
 
-
-@app.post("/rotate")
-async def rotate(
+@app.post("/line")
+async def draw_line(
     image: UploadFile = File(...),
-    angle: float = Form(...)
+    x1: int = Form(...),
+    y1: int = Form(...),
+    x2: int = Form(...),
+    y2: int = Form(...)
 ):
     data = await image.read()
     img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
 
-    h, w = img.shape[:2]
-    M = cv2.getRotationMatrix2D((w/2, h/2), angle, 1)
-    rotated = cv2.warpAffine(img, M, (w, h))
+    cv2.line(
+        img,
+        (x1, y1),
+        (x2, y2),
+        color=(0, 0, 255),
+        thickness=2
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+@app.post("/rectangle")
+async def draw_rectangle(
+    image: UploadFile = File(...),
+    x1: int = Form(...),
+    y1: int = Form(...),
+    x2: int = Form(...),
+    y2: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.rectangle(
+        img,
+        (x1, y1),
+        (x2, y2),
+        color=(0, 255, 0),
+        thickness=2
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+
+@app.post("/circle")
+async def draw_circle(
+    image: UploadFile = File(...),
+    cx: int = Form(...),
+    cy: int = Form(...),
+    radius: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.circle(
+        img,
+        center=(cx, cy),
+        radius=radius,
+        color=(255, 0, 0),  # آبی (BGR)
+        thickness=2
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+@app.post("/text")
+async def put_text(
+    image: UploadFile = File(...),
+    text: str = Form(...),
+    x: int = Form(...),
+    y: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    cv2.putText(
+        img,
+        text,
+        (x, y),
+        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        fontScale=1,
+        color=(255, 255, 255),
+        thickness=2,
+        lineType=cv2.LINE_AA
+    )
+
+    _, buf = cv2.imencode(".png", img)
+    return Response(content=buf.tobytes(), media_type="image/png")
+
+
+@app.post("/rotate")
+async def rotate(
+    image: UploadFile = File(...),
+    angle: int = Form(...)
+):
+    data = await image.read()
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+    if angle == 90:
+        rotated = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    elif angle == -90:
+        rotated = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    elif angle == 180:
+        rotated = cv2.rotate(img, cv2.ROTATE_180)
+    else:
+        return Response(
+            content=b"Invalid angle. Use 90, -90, or 180.",
+            status_code=400
+        )
 
     _, buf = cv2.imencode(".png", rotated)
     return Response(content=buf.tobytes(), media_type="image/png")
+
 
 @app.post("/brightness-contrast")
 async def brightness_contrast(
@@ -70,8 +166,10 @@ async def brightness_contrast(
     data = await image.read()
     img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
 
-    alpha = contrast       # کنتراست
-    beta = brightness      # روشنایی
+    alpha = contrast  
+    beta = brightness
+    
+    print(alpha , beta)
 
     out = cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
 
